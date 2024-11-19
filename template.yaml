@@ -1,0 +1,67 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: 
+  SAM Template for Data Drift Report Lambda with SES integration.
+
+Globals:
+  Function:
+    Timeout: 600  # 10 minutes
+    MemorySize: 1024  # 1 GB
+
+Resources:
+  # S3 Buckets
+  CurrentDataBucket5:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: dq5-cur-data-s3
+
+  ReferenceDataBucket5:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: dq5-ref-data-s3
+  ReportsBucket5:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: dq5-reports-s3
+
+  # Lambda Function
+  DataDriftReportLambdaversion5:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: DataDriftReportLambdaversion5
+      PackageType: Image
+      Architectures:
+        - x86_64
+      Events:
+        S3Trigger:
+          Type: S3
+          Properties:
+            Bucket: !Ref CurrentDataBucket5  # Trigger on the current data bucket
+            Events:
+              - s3:ObjectCreated:*  # Trigger on any object created (file upload)
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - AmazonS3FullAccess
+        - AmazonSESFullAccess
+
+    Metadata:
+      Dockerfile: Dockerfile
+      DockerContext: ./DataDriftReportLambdaversion5
+      DockerTag: python3.11-v21
+
+Outputs:
+  LambdaFunctionArn:
+    Description: "Data Drift Report Lambda Function ARN"
+    Value: !GetAtt DataDriftReportLambdaversion5.Arn
+
+  CurrentDataBucketName:
+    Description: "Name of the Current Data S3 Bucket"
+    Value: !Ref CurrentDataBucket5
+
+  ReferenceDataBucketName:
+    Description: "Name of the Reference Data S3 Bucket"
+    Value: !Ref ReferenceDataBucket5
+
+  ReportsBucketName:
+    Description: "Name of the Reports S3 Bucket"
+    Value: !Ref ReportsBucket5
