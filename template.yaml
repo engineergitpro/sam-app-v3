@@ -10,25 +10,25 @@ Globals:
 
 Resources:
   # S3 Buckets
-  CurrentDataBucket5:
+  CurrentDataBucket6:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: dq5-cur-data-s3
+      BucketName: dq6-cur-data-s3
 
-  ReferenceDataBucket5:
+  ReferenceDataBucket6:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: dq5-ref-data-s3
-  ReportsBucket5:
+      BucketName: dq6-ref-data-s3
+  ReportsBucket6:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: dq5-reports-s3
+      BucketName: dq6-reports-s3
 
   # Lambda Function
-  DataDriftReportLambdaversion5:
+  DataDriftReportLambdaversion6:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: DataDriftReportLambdaversion5
+      FunctionName: DataDriftReportLambdaversion6
       PackageType: Image
       Architectures:
         - x86_64
@@ -36,7 +36,7 @@ Resources:
         S3Trigger:
           Type: S3
           Properties:
-            Bucket: !Ref CurrentDataBucket5  # Trigger on the current data bucket
+            Bucket: !Ref CurrentDataBucket6  # Trigger on the current data bucket
             Events:
               - s3:ObjectCreated:*  # Trigger on any object created (file upload)
       Policies:
@@ -46,22 +46,22 @@ Resources:
 
     Metadata:
       Dockerfile: Dockerfile
-      DockerContext: ./DataDriftReportLambdaversion5
+      DockerContext: ./DataDriftReportLambdaversion6
       DockerTag: python3.11-v21
 
 Outputs:
   LambdaFunctionArn:
     Description: "Data Drift Report Lambda Function ARN"
-    Value: !GetAtt DataDriftReportLambdaversion5.Arn
+    Value: !GetAtt DataDriftReportLambdaversion6.Arn
 
   CurrentDataBucketName:
     Description: "Name of the Current Data S3 Bucket"
-    Value: !Ref CurrentDataBucket5
+    Value: !Ref CurrentDataBucket6
 
   ReferenceDataBucketName:
     Description: "Name of the Reference Data S3 Bucket"
-    Value: !Ref ReferenceDataBucket5
+    Value: !Ref ReferenceDataBucket6
 
   ReportsBucketName:
     Description: "Name of the Reports S3 Bucket"
-    Value: !Ref ReportsBucket5
+    Value: !Ref ReportsBucket6
