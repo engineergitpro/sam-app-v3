@@ -15,7 +15,7 @@ lint = true
 [default.deploy.parameters]
 capabilities = "CAPABILITY_IAM"
 confirm_changeset = true
-resolve_s3 = false
+resolve_s3 = true
 resolve_image_repos = true
 s3_prefix = "sam-app-v5"
 region = "us-east-1"
@@ -23,7 +23,7 @@ disable_rollback = true
 stack_name = "sam-app-v5"
 
 [default.package.parameters]
-resolve_s3 = true
+resolve_s3 = false
 
 [default.sync.parameters]
 watch = true
