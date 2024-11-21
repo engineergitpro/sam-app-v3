@@ -14,9 +14,9 @@ s3_client = boto3.client('s3')
 ses_client = boto3.client('ses', region_name='us-east-1')  # Replace with your SES region
 
 # Updated S3 bucket configuration
-CUR_DATA_BUCKET = "dq5-cur-data-s3"
-REF_DATA_BUCKET = "dq5-ref-data-s3"
-REPORTS_BUCKET = "dq5-reports-s3"
+CUR_DATA_BUCKET = "dq6-cur-data-s3"
+REF_DATA_BUCKET = "dq6-ref-data-s3"
+REPORTS_BUCKET = "dq6-reports-s3"
 
 def load_data_from_s3(bucket: str, key: str):
     """
@@ -73,7 +73,7 @@ def send_email_with_attachment(to_email: str, subject: str, body: str, attachmen
 def lambda_handler(event, context):
     """
     Lambda function handler to detect data drift, save the report to S3, and send the report via SES.
-    Triggered when a file is uploaded to the "dq5-cur-data-s3" bucket.
+    Triggered when a file is uploaded to the "dq6-cur-data-s3" bucket.
     """
     for record in event['Records']:
         bucket_name = record['s3']['bucket']['name']
@@ -121,5 +121,5 @@ def lambda_handler(event, context):
 
     return {
         'statusCode': 200,
-        'body': json.dumps({'message': 'No files processed from the dq5-cur-data-s3 bucket.'})
+        'body': json.dumps({'message': 'No files processed from the dq6-cur-data-s3 bucket.'})
     }
